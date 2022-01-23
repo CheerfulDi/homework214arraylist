@@ -1,1 +1,8 @@
-/src/
+.idea
+out
+
+target
+build
+
+*.class
+*.iml
