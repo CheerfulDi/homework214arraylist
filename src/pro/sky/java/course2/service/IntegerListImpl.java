@@ -61,6 +61,7 @@ public class IntegerListImpl implements IntegerList{
     public Integer remove(int index) {
         checkIndex(index);
         removeItem(index);
+        checkCapacityAfterRemove();
         return array[index];
     }
 
@@ -73,7 +74,7 @@ public class IntegerListImpl implements IntegerList{
 
     @Override
     public boolean contains(Integer[] array, int element) {
-        sortSelection(array);
+        quickSort(array,0, array.length-1);
         int min = 0;
         int max = array.length - 1;
 
@@ -183,20 +184,43 @@ public class IntegerListImpl implements IntegerList{
         }
     }
 
-    private Integer[] grow() {
-        return Arrays.copyOf(array,array.length * 2);
+    private void checkCapacityAfterRemove() {
+        if (size < (array.length / 2)) {
+            array = resize();
+        }
     }
 
-    private void sortSelection(Integer[] array) {
-        for (int i = 0; i < array.length - 1; i++) {
-            int minElementIndex = i;
-            for (int j = i + 1; j < array.length; j++) {
-                if (array[j] < array[minElementIndex]) {
-                    minElementIndex = j;
-                }
-            }
-            swapElements(array, i, minElementIndex);
+    private Integer[] grow() {
+        return Arrays.copyOf(array, array.length * 2 / 3);
+    }
+
+    private Integer[] resize() {
+        return Arrays.copyOf(array, array.length / 3);
+    }
+
+    private void quickSort(Integer[] array, int begin, int end) {
+        if (begin < end) {
+            int partitionIndex = partition(array, begin, end);
+
+            quickSort(array, begin, partitionIndex - 1);
+            quickSort(array, partitionIndex + 1, end);
         }
+    }
+
+    private int partition(Integer[] array, int begin, int end) {
+        int pivot = array[end];
+        int i = (begin - 1);
+
+        for (int j = begin; j < end; j++) {
+            if (array[j] <= pivot) {
+                i++;
+
+                swapElements(array, i, j);
+            }
+        }
+
+        swapElements(array, i + 1, end);
+        return i + 1;
     }
 
     private void swapElements(Integer[] array, int indexA, int indexB) {
