@@ -33,8 +33,8 @@ public class IntegerListImpl implements IntegerList{
     @Override
     public Integer add(int index, Integer item) {
         checkNotNull(item);
-        checkCapacity();
         checkIndex(index);
+        checkCapacity();
         System.arraycopy(array, index, array, index + 1, array.length - index);
         array[size++] = item;
         return item;
@@ -150,7 +150,7 @@ public class IntegerListImpl implements IntegerList{
 
     @Override
     public void clear() {
-        array = generateRandomArray();
+        array = new Integer[100_000];
 
     }
 
